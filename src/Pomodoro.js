@@ -4,103 +4,83 @@ class Pomodoro extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            minutes: 2,
-            secs: 0,
-            // finished: true,
+            timer: 25 * 60,
             running: false,
-            delay: 1000
+            delay: 50
         };
         this.handlePlay = this.handlePlay.bind(this);
-        this.handlePause = this.handlePause.bind(this);
-        // this.handleUnPause = this.handleUnPause.bind(this);
-        // this.handleReset = this.handleReset.bind(this);
+        this.handleStop = this.handleStop.bind(this);
+        this.handleReset = this.handleReset.bind(this);
+        this.handlePlus = this.handlePlus.bind(this);
+        this.handleMinus = this.handleMinus.bind(this);
     }
     handlePlay() {
-        const id = setInterval(() => {
-            this.setState(st => ({ secs: st.secs - 1, running: true }));
-            if (this.state.secs < 0) {
-                return this.setState(st => ({
-                    finished : false,
-                    minutes: st.minutes - 1,
-                    secs: (st.secs = 59)
-                }));
+        this.interval = setInterval(() => {
+            this.setState(st => ({ timer: st.timer - 1, running: true }));
+            if (this.state.timer === 0) {
+                this.handleStop();
             }
-            if (this.state.minutes <= 0 && this.state.secs <= 0) {
-                clearInterval(id);
-                // this.setState({ finished: true, running: false });
-            }
-        },this.state.delay);
+        }, this.state.delay);
     }
-    // handleReset() {
-    //     this.setState({ minutes: 2, secs: 0 });
-    // }
-    handlePause() {
-        this.setState({ delay: 0, running: false });
+    handleStop() {
+        this.setState({ running: false });
+        clearInterval(this.interval);
     }
-    // handleUnPause() {
-    //     this.setState({ delay: 1000, running: true });
-    // }
-
+    handleReset() {
+        this.setState(st => ({ timer: (st.timer = 25 * 60) }));
+    }
+    handlePlus() {
+        this.setState(st => ({ timer: st.timer + 60 }));
+    }
+    handleMinus() {
+        this.setState(st => ({ timer: st.timer - 60 }));
+    }
     render() {
-        let padToTwo = number =>
-            number <= 99 ? `0${number}`.slice(-2) : number;
         let playBtn = (
             <button id="play" onClick={this.handlePlay}>
                 PLAY
             </button>
         );
-        let pauseBtn = (
-            <button id="pause" onClick={this.handlePause}>
-                PAUSE
+        let stopBtn = (
+            <button id="stop" onClick={this.handleStop}>
+                STOP
             </button>
         );
-        // let unpauseBtn = (
-        //     <button id="pause" onClick={this.handleUnPause}>
-        //         UNPAUSE
-        //     </button>
-        // );
-
+        let resetBtn = (
+            <button id="reset" onClick={this.handleReset}>
+                RESET
+            </button>
+        );
+        let plusBtn = (
+            <button id="plus" onClick={this.handlePlus}>
+                +
+            </button>
+        );
+        let minusBtn = (
+            <button id="minus" onClick={this.handleMinus}>
+                -
+            </button>
+        );
+        let secs = String(this.state.timer % 60);
+        let mins = String(Math.floor(this.state.timer / 60));
         return (
             <div>
                 <h1>Pomodoro</h1>
                 <div className="cadre">
                     <div className="innerFunction">
                         <div className="timer">
-                            {this.state.minutes} : {padToTwo(this.state.secs)}
+                            {mins.padStart(2, "0")} : {secs.padStart(2, "0")}
                         </div>
-
                         <div className="groupBtn">
-                            {!this.state.running && (
-                                <button id="plus" onClick="">
-                                    +
-                                </button>
-                            )}
-
-
-                            {this.state.running ? pauseBtn: playBtn}
-
-
-                            {/* <button id="reset" onClick={this.handleReset}>
-                                RESET
-                            </button> */}
-                            {!this.state.running && (
-                                <button id="less" onClick="">
-                                    -
-                                </button>
-                            )}
+                            {!this.state.running && plusBtn}
+                            {this.state.running
+                                ? stopBtn
+                                : this.state.timer === 0
+                                ? resetBtn
+                                : playBtn}
+                            {!this.state.running && minusBtn}
                         </div>
                     </div>
-                </div>
-
-                <div className="modal js-modal">
-                    <div className="modal-image">
-                        <svg viewBox="0 0 32 32" style={{ fill: "#48DB71" }}>
-                            <path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z"></path>
-                        </svg>
-                    </div>
-                    <h1>Nice job!</h1>
-                    <p>To dismiss click the button below</p>
-                    <button className="js-close">Dismiss</button>
                 </div>
             </div>
         );
