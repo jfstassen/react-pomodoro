@@ -53,24 +53,29 @@ class Pomodoro extends Component {
         );
         let plusBtn = (
             <button id="plus" onClick={this.handlePlus}>
-                +
+                <ion-icon name="add"></ion-icon>
             </button>
         );
         let minusBtn = (
             <button id="minus" onClick={this.handleMinus}>
-                -
+                <ion-icon name="remove"></ion-icon>
             </button>
         );
         let secs = String(this.state.timer % 60);
         let mins = String(Math.floor(this.state.timer / 60));
         return (
-            <div>
-                <h1>Pomodoro</h1>
+            <div className="container">
+                <div className="grid">
+                    <h1 id="pomo">Pomo</h1>
+                    <h1 id="doro">doro</h1>
+                </div>
+
                 <div className="cadre">
                     <div className="innerFunction">
                         <div className="timer">
-                            {mins.padStart(2, "0")} : {secs.padStart(2, "0")}
+                            {mins.padStart(2, "0")}:{secs.padStart(2, "0")}
                         </div>
+
                         <div className="groupBtn">
                             {!this.state.running && plusBtn}
                             {this.state.running
@@ -81,6 +86,7 @@ class Pomodoro extends Component {
                             {!this.state.running && minusBtn}
                         </div>
                     </div>
+                    <div className="blurred"></div>
                 </div>
             </div>
         );
