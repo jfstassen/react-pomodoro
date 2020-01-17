@@ -6,7 +6,7 @@ class Pomodoro extends Component {
         this.state = {
             timer: 25 * 60,
             running: false,
-            delay: 50
+            delay: 1000
         };
         this.handlePlay = this.handlePlay.bind(this);
         this.handleStop = this.handleStop.bind(this);
