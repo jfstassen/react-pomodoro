@@ -18,6 +18,7 @@
 
 ## Screen
 ![Image](https://i.imgur.com/QeL8rll.png)
+[Deployed on Netlify](https://zen-ritchie-5555df.netlify.com/)
 
 
 
